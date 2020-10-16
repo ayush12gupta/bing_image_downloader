@@ -17,7 +17,7 @@ pip install bing-image-downloader
 
 or 
 ```bash
-git clone https://github.com/gurugaurav/bing_image_downloader
+git clone https://github.com/ayush12gupta/bing_image_downloader
 cd bing_image_downloader
 pip install .
 ```
