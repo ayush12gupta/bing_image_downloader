@@ -63,13 +63,13 @@ class Bing:
 
             # Download the image
             print("[%] Downloading Image #{} from {}".format(self.download_count + int(self.start)-1, link))
-            if link not in self.links:
-                self.save_image(link, "{}/{}/{}/".format(os.getcwd(), self.output_dir, self.query) + "{}.{}".format(
-                    str(self.download_count + int(self.start) - 1), file_type))
-                print("[%] File Downloaded !\n")
-            else:
-                self.download_count -= 1
-                print("[!] Duplicate Image")
+#             if link not in self.links:
+            self.save_image(link, "{}/{}/{}/".format(os.getcwd(), self.output_dir, self.query) + "{}.{}".format(
+                str(self.download_count + int(self.start) - 1), file_type))
+            print("[%] File Downloaded !\n")
+#             else:
+#                 self.download_count -= 1
+#                 print("[!] Duplicate Image")
         except Exception as e:
             self.download_count -= 1
             print("[!] Issue getting: {}\n[!] Error:: {}".format(link, e))
