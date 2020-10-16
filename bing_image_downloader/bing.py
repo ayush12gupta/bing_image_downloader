@@ -6,6 +6,7 @@ import urllib
 import imghdr
 import posixpath
 import re
+import pandas as pd
 
 '''
 Python api to download image form Bing.
@@ -14,12 +15,19 @@ Author: Guru Prasad (g.gaurav541@gmail.com)
 
 
 class Bing:
-    def __init__(self, query, limit, output_dir, adult, timeout, filters=''):
+    def __init__(self, query, limit, output_dir, adult, timeout, links, fname, queries, filters=''):
         self.download_count = 0
         self.query = query
         self.output_dir = output_dir
         self.adult = adult
         self.filters = filters
+        self.links = links
+        self.file = fname
+        if len(fname):
+            self.start = fname[-1].split('.')[0]
+        else:
+            self.start = '1'
+        self.queries = queries
 
         assert type(limit) == int, "limit must be integer"
         self.limit = limit
@@ -32,11 +40,15 @@ class Bing:
     def save_image(self, link, file_path):
         request = urllib.request.Request(link, None, self.headers)
         image = urllib.request.urlopen(request, timeout=self.timeout).read()
+        file = file_path.split('/')
         if not imghdr.what(None, image):
             print('[Error]Invalid image, not saving {}\n'.format(link))
             raise
         with open(file_path, 'wb') as f:
             f.write(image)
+            self.file.append(file[-1])
+            self.links.append(link)
+            self.queries.append(file[-2])
 
     def download_image(self, link):
         self.download_count += 1
@@ -50,11 +62,14 @@ class Bing:
                 file_type = "jpg"
 
             # Download the image
-            print("[%] Downloading Image #{} from {}".format(self.download_count, link))
-
-            self.save_image(link, "{}/{}/{}/".format(os.getcwd(), self.output_dir, self.query) + "Image_{}.{}".format(
-                str(self.download_count), file_type))
-            print("[%] File Downloaded !\n")
+            print("[%] Downloading Image #{} from {}".format(self.download_count + int(self.start)-1, link))
+            if link not in self.links:
+                self.save_image(link, "{}/{}/{}/".format(os.getcwd(), self.output_dir, self.query) + "{}.{}".format(
+                    str(self.download_count + int(self.start) - 1), file_type))
+                print("[%] File Downloaded !\n")
+            else:
+                self.download_count -= 1
+                print("[!] Duplicate Image")
         except Exception as e:
             self.download_count -= 1
             print("[!] Issue getting: {}\n[!] Error:: {}".format(link, e))
@@ -83,3 +98,4 @@ class Bing:
                     break
 
             self.page_counter += 1
+        return self.links, self.file, self.query
