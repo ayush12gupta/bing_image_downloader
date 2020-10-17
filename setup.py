@@ -11,7 +11,7 @@ setuptools.setup(
     description="Python library to download bulk images from Bing.com",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/gurugaurav/bing_image_downloader",
+    url="https://github.com/ayush12gupta/bing_image_downloader",
     keywords=['bing', 'images', 'scraping', 'image download', 'bulk image downloader',],
     packages=['bing_image_downloader'],
     classifiers=[
