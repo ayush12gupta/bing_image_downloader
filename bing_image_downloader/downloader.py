@@ -26,7 +26,6 @@ def download(query, limit=100, output_dir='dataset', adult_filter_off=True, forc
         queries = []
         # start = '1'
     cwd = os.getcwd()
-    print(cwd,' ',output_dir,' ',query)
     image_dir = os.path.join(cwd, output_dir, query)
 
     if force_replace:

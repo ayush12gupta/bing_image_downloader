@@ -24,7 +24,7 @@ class Bing:
         self.links = links
         self.file = fname
         if len(fname):
-            self.start = fname[-1].split('.')[0]
+            self.start = int(fname[-1].split('.')[0]) + 1
         else:
             self.start = '1'
         self.queries = queries
@@ -42,7 +42,7 @@ class Bing:
         image = urllib.request.urlopen(request, timeout=self.timeout).read()
         file = file_path.split('/')
         if not imghdr.what(None, image):
-            print('[Error]Invalid image, not saving {}\n'.format(link))
+            # print('[Error]Invalid image, not saving {}\n'.format(link))
             raise
         with open(file_path, 'wb') as f:
             f.write(image)
@@ -62,17 +62,17 @@ class Bing:
                 file_type = "jpg"
 
             # Download the image
-            print("[%] Downloading Image #{} from {}".format(self.download_count + int(self.start)-1, link))
+            # print("[%] Downloading Image #{} from {}".format(self.download_count + int(self.start)-1, link))
 #             if link not in self.links:
             self.save_image(link, "{}/{}/{}/".format(os.getcwd(), self.output_dir, self.query) + "{}.{}".format(
                 str(self.download_count + int(self.start) - 1), file_type))
-            print("[%] File Downloaded !\n")
+            # print("[%] File Downloaded !\n")
 #             else:
 #                 self.download_count -= 1
 #                 print("[!] Duplicate Image")
         except Exception as e:
             self.download_count -= 1
-            print("[!] Issue getting: {}\n[!] Error:: {}".format(link, e))
+            # print("[!] Issue getting: {}\n[!] Error:: {}".format(link, e))
 
     def run(self):
         while self.download_count < self.limit:
@@ -86,16 +86,17 @@ class Bing:
             html = response.read().decode('utf8')
             links = re.findall('murl&quot;:&quot;(.*?)&quot;', html)
 
-            print("[%] Indexed {} Images on Page {}.".format(len(links), self.page_counter + 1))
-            print("\n===============================================\n")
+            # print("[%] Indexed {} Images on Page {}.".format(len(links), self.page_counter + 1))
+            # print("\n===============================================\n")
 
             for link in links:
                 if self.download_count < self.limit:
                     self.download_image(link)
                 else:
-                    print("\n\n[%] Done. Downloaded {} images.".format(self.download_count))
-                    print("\n===============================================\n")
+                    print("\n\n[%] Done. Downloaded {} images of '{}'.".format(self.download_count, self.query))
+                    # print("\n===============================================\n")
                     break
 
             self.page_counter += 1
-        return self.links, self.file, self.query
+    
+        return self.links, self.file, self.queries
